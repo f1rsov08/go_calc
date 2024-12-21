@@ -12,8 +12,10 @@ func TestCalc(t *testing.T) {
 	}{
 		{"1+1", 2, false},
 		{"3 -4", -1, false},
-		{"2 * 3", 6, false},
+		{"2 * -3", -6, false},
 		{"5/ 10", 0.5, false},
+		{"4. + 3", 0, true},
+		{"4 + .3", 0, true},
 		{"(1 + 2)* 3", 9, false},
 		{"2+2*2", 6, false},
 		{"(1 + 2", 0, true},

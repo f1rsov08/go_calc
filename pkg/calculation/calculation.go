@@ -60,7 +60,7 @@ func Calc(expression string) (float64, error) {
 			s[len(s)-1] += string(i)
 		} else if isValidOperation(i) {
 			// Если символ является операцией, проверяем заканчивается ли число на точку
-			if s[len(s)-1] == "." {
+			if s[len(s)-1][len(s[len(s)-1])-1] == '.' {
 				return 0, errors.New("Expression is not valid")
 			}
 			// Если нет, добавляем символ операции в срез и инициализируем новое число
