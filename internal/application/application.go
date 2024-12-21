@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Addr string
+	Addr string // Порт, на котором будет запущен сервер
 }
 
+// Функция для создания конфигурации из переменных окружения
 func ConfigFromEnv() *Config {
 	config := new(Config)
 	config.Addr = os.Getenv("PORT")
@@ -21,30 +22,36 @@ func ConfigFromEnv() *Config {
 	return config
 }
 
+// Структура приложения, содержащая конфигурацию
 type Application struct {
 	config *Config
 }
 
+// Функция для создания нового экземпляра приложения
 func New() *Application {
 	return &Application{
 		config: ConfigFromEnv(),
 	}
 }
 
+// Метод для запуска HTTP-сервера
 func (a *Application) RunServer() error {
 	http.HandleFunc("/api/v1/calculate", CalcHandler)
 	return http.ListenAndServe(":"+a.config.Addr, nil)
 }
 
+// Структура запроса для обработки входящих данных
 type Request struct {
 	Expression string `json:"expression"`
 }
 
+// Структура ответа для отправки клиенту
 type Response struct {
 	Result float64 `json:"result,omitempty"`
 	Error  string  `json:"error,omitempty"`
 }
 
+// Обработчик HTTP-запросов для выполнения вычислений
 func CalcHandler(w http.ResponseWriter, r *http.Request) {
 	request := new(Request)
 	defer r.Body.Close()
