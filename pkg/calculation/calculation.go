@@ -90,7 +90,7 @@ func Calc(expression string) (float64, error) {
 				n = n1 * n2 // Умножение
 			} else if s[ind] == "/" {
 				if n2 == 0 {
-					return 0, errors.New("Expression is not valid") // Ошибка деления на ноль
+					return 0, errors.New("Internal server error") // Ошибка деления на ноль
 				}
 				n = n1 / n2 // Деление
 			}

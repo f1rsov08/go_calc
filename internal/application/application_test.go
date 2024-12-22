@@ -21,7 +21,7 @@ func TestCalcHandler(t *testing.T) {
 		{"(1 + 2)* 3", 9, http.StatusOK},
 		{"2+2*2", 6, http.StatusOK},
 		{"(1 + 2", 0, http.StatusUnprocessableEntity},
-		{"1 /0", 0, http.StatusUnprocessableEntity},
+		{"1 /0", 0, http.StatusInternalServerError},
 		{"abc", 0, http.StatusUnprocessableEntity},
 		{"1 + (2 * (3 - 1))", 5, http.StatusOK},
 		{"", 0, http.StatusInternalServerError},

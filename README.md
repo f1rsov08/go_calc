@@ -83,6 +83,22 @@ curl --location 'localhost:8080/api/v1/calculate' \
     "error": "Expression is not valid"
 }
 ```
+#### Внутренняя ошибка
+
+```bash
+curl --location 'localhost:8080/api/v1/calculate' \
+--header 'Content-Type: application/json' \
+--data '{
+  "expression": "1 /0"
+}'
+```
+Ожидаемый ответ:
+
+```json
+{
+    "error": "Internal server error"
+}
+```
 ## Запуск проекта
 
 Для запуска проекта выполните следующую команду:
