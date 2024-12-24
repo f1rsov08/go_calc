@@ -3,6 +3,7 @@ package calculation
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -26,6 +27,10 @@ func isValidInNumber(num string, c rune) bool {
 	}
 	if c == '-' {
 		// Минус может быть в числе только один раз и только в начале
+		return !strings.Contains(num, "-") && len(num) == 0
+	}
+	if c == '+' {
+		// Плюс может быть в числе только один раз и только в начале
 		return !strings.Contains(num, "-") && len(num) == 0
 	}
 	// Проверка на допустимые цифры.
@@ -121,6 +126,10 @@ func Calc(expression string) (float64, error) {
 
 // evaluate решает выражения в скобках
 func evaluate(expression string) (string, error) {
+	re := regexp.MustCompile("[+-]{3,}")
+	if re.MatchString(expression) {
+		return "", errors.New("Expression is not valid")
+	}
 	s := []string{""} // Инициализация среза для хранения частей выражения
 	var n int         // Счетчик открывающих скобок
 	var v float64
@@ -155,7 +164,27 @@ func evaluate(expression string) (string, error) {
 		}
 	}
 	if n == 0 {
-		return strings.Join(s, ""), nil // Возвращаем объединенное выражение без скобок
+		evaluated := strings.Join(s, "")
+
+		// Минус на минус дает плюс
+		evaluated = strings.ReplaceAll(evaluated, "--", "+")
+
+		// Другие ситуации
+		evaluated = strings.ReplaceAll(evaluated, "+-", "-")
+		evaluated = strings.ReplaceAll(evaluated, "-+", "-")
+
+		// Создаем регулярное выражение для поиска повторяющихся плюсов
+		re := regexp.MustCompile("\\++")
+
+		// Заменяем все повторяющиеся плюсы на один "+"
+		evaluated = re.ReplaceAllString(evaluated, "+")
+
+		re = regexp.MustCompile("[\\+\\-*/]{2,}")
+		if re.MatchString(evaluated) {
+			return "", errors.New("Expression is not valid")
+		}
+
+		return evaluated, nil // Возвращаем объединенное выражение без скобок
 	} else {
 		return "", errors.New("Expression is not valid") // Ошибка при наличии незакрытых скобок
 	}
